@@ -81,3 +81,51 @@ bool free_wp(int num){
 	}
 	return false;
 }
+
+void print_wp(){
+	if(head=NULL){
+		print("no watchpoint now\n");
+		return;
+	}
+	printf("watchpoint:\n");
+	printf("NO.   expr   hitTimes\n");
+	wptemp=head;
+	while(wptemp!=NULL){
+		printf("%d     %s      %d\n",wptemp->NO,wptemp->e,wptemp->hitNum);
+		wptemp=wptemp->next;
+	}
+}
+
+bool watch_wp(){
+	bool success;
+	int result;
+	if(head=NULL)
+		return true;
+	wptemp=head;
+	while(wptemp!=NULL){
+		result=expr(wptemp->e,&success);
+		if(result!=wptemp->oldValue){
+			wptemp->hitNum+=1;
+			printf("Hardware watchpoint %d:%s\n",wptemp->NO,wptemp->e);
+			printf("Old value:%d\nNew value:%d\n\n",wptemp->oldValue,result);
+			wptemp->oldValue=result;
+			return false;
+		}
+		wptemp=wptemp->next;
+	}
+	return true;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
