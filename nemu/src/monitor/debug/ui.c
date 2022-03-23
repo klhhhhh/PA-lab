@@ -41,8 +41,8 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
-//static int cmd_w(char* args);
-//static int cmd_d(char * agrs);
+static int cmd_w(char* args);
+static int cmd_d(char * agrs);
 static struct {
   char *name;
   char *description;
@@ -159,6 +159,28 @@ static int cmd_p(char *args) {
     uint32_t res =  expr(args,success);
     printf("the value of expr is\n",res);
     return 0;
+}
+
+static int cmd_w(char* args){
+	new_wp(args);
+	return 0;
+}
+
+static int cmd_d(char* args){
+	int num=0;
+	int nRet=sscanf(args,"%d",&num);
+	if(nRet<=0){
+		printf("args error in cmd_si\n");
+		return 0;
+	}
+	int r=free_wp(num);
+	if(r==false){
+		printf("error: no watchpoint %d\n",num);
+	}
+	else{
+		prinf("success delete watchpoint %d\n",num);
+	}
+	return 0;
 }
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
