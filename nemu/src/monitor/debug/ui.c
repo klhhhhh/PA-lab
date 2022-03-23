@@ -178,7 +178,7 @@ static int cmd_d(char* args){
 		printf("error: no watchpoint %d\n",num);
 	}
 	else{
-		prinf("success delete watchpoint %d\n",num);
+		printf("success delete watchpoint %d\n",num);
 	}
 	return 0;
 }
