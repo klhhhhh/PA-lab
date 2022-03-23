@@ -188,7 +188,7 @@ uint32_t eval(int p,int q){
         int op_type=0;
         bool left = false;//
         int curr_prev = 100;//
-        for(int i=p;i<=q;i++){  //æ
+        for(int i=p;i<=q;i++){  
             if(tokens[i].str[0]==')')
             {
                 left = false;
@@ -245,21 +245,24 @@ uint32_t expr(char *e, bool *success) {
     return 0;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
-  //TODO();
-  if(nr_token!=1)  
-    for(int i=0;i<nr_token;i++)  //
+  if(nr_token!=1) 
+    for(int i=0;i<nr_token;i++) 
         if(tokens[i].type == '-' &&(i==0||tokens[i-1].type == '('||tokens[i-1].type == TK_NEG
                                                                  ||tokens[i-1].type == '-'
                                                                  ||tokens[i-1].type == '+'
                                                                  ||tokens[i-1].type == '*'
                                                                  ||tokens[i-1].type == '/'))
             tokens[i].type = TK_NEG;
+ // if(nr_token!=1)
       for(int i=0;i<nr_token;i++)
           if(tokens[i].type == '*' &&(i==0||(tokens[i-1].type!=TK_DEC && tokens[i-1].type!=TK_HEX && tokens[i-1].type!=')')))
               tokens[i].type = TK_POI;
 
- 
+  //*success = true;
+  /* TODO: Insert codes to evaluate the expression. */
+  // TODO();  
+  //
+  //printf("RESULT=%d\n",eval(0, nr_token-1));
 
   return eval(0, nr_token-1);
 }
