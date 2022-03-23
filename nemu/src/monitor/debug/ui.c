@@ -157,8 +157,7 @@ static int cmd_p(char *args) {
         return 0;
     }
     uint32_t res =  expr(args,success);
-    printf("10\n",res);
-    printf("16\n",res);
+    printf("the value of expr is\n",res);
     return 0;
 }
 void ui_mainloop(int is_batch_mode) {
