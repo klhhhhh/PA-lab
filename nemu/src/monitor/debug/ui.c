@@ -57,8 +57,8 @@ static struct {
   {"info","args:r/w;print infomation about registers or watchpoint",cmd_info},
   {"x","x [N] [EXPR];scan the memory",cmd_x},
   {"p","expr",cmd_p},
-  //{"w","set the watchpoint",cmd_w},
-  //{"d","delete the watchpoint",cmd_d},
+  {"w","set the watchpoint",cmd_w},
+  {"d","delete the watchpoint",cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
