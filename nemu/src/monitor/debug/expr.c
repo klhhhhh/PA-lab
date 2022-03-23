@@ -124,6 +124,38 @@ static bool make_token(char *e) {
 
   return true;
 }
+
+bool check_parentheses(int p,int q){
+    if((tokens[p].str[0]=='(') && (tokens[q].str[0]==')')){
+        int count = 0;
+        for(int i=p;i<q;i++) //
+        {
+            if(tokens[i].str[0] == '(')
+                count = count + 1;
+            if(tokens[i].str[0] == ')')
+                count = count - 1;
+            if(count == 0)
+            {
+                //printf("Leftmost and rightmost are not matched\n");
+                return false;
+            }
+        }
+        count = count -1; 
+        if(count !=0) 
+        {
+            printf("Bad parentheses\n");
+            assert(0);
+        }
+        return true;
+    }
+    else
+    {
+        // printf("The whole expr was not surrounded\n");
+        return false;
+    }
+}
+
+
 uint32_t eval(int p,int q){
     if(p>q){   //3+缺省为3+0 --1缺省为0--1
         // printf("Bad expression\n");
