@@ -7,11 +7,16 @@
 #include <regex.h>
 
 enum {  //start from 256 to avoid ascii
-  TK_NOTYPE = 256, TK_HEX, TK_DEC, TK_REG, TK_EQ, TK_NEQ, 
-  TK_AND, TK_OR,
+  TK_NOTYPE = 256, 
+  TK_HEX,
+  TK_DEC,
+  TK_REG, 
+  TK_EQ, 
+  TK_NEQ, 
+  TK_AND, 
+  TK_OR,
   TK_NEG,      //negative number
   TK_POI,       //use for get the content of pointer
-  TK_LS, TK_RS, TK_BOE, TK_LOE
 
   /* TODO: Add more token types */
 
@@ -26,10 +31,25 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
-  {"0|[1-9][0-9]*",TK_NUMBER},//number 0 and number not start with 0
+  {"0x[0-9A-Fa-f][0-9A-Fa-f]*", TK_HEX},
+  {"0|[1-9][0-9]*", TK_DEC},
+  {"\\$(eax|ecx|edx|ebx|esp|ebp|esi|edi|eip|ax|cx|dx|bx|sp|bp|si|di|al|cl|dl|bl|ah|ch|dh|bh)", TK_REG},
+
+  {"\\+", '+'},         
+  {"-", '-'},          
+  {"\\*", '*'},
+  {"\\/", '/'},
+
+  {"\\(", '('},
+  {"\\)", ')'},
   
+  {"==", TK_EQ},         
+  {"!=", TK_NEQ},
+
+  {"&&", TK_AND},
+  {"\\|\\|", TK_OR},
+  {"!", '!'},
+
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
