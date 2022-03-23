@@ -56,7 +56,7 @@ static struct {
   {"si","args:[N];execute [N] instructions step by step",cmd_si},
   {"info","args:r/w;print infomation about registers or watchpoint",cmd_info},
   {"x","x [N] [EXPR];scan the memory",cmd_x},
-  //{"p","expr",cmd_p},
+  {"p","expr",cmd_p},
   //{"w","set the watchpoint",cmd_w},
   //{"d","delete the watchpoint",cmd_d},
 };
