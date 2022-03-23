@@ -40,9 +40,9 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
-static int cmd_p(char *args);
-static int cmd_w(char* args);
-static int cmd_d(char * agrs);
+//static int cmd_p(char *args);
+//static int cmd_w(char* args);
+//static int cmd_d(char * agrs);
 static struct {
   char *name;
   char *description;
@@ -56,9 +56,9 @@ static struct {
   {"si","args:[N];execute [N] instructions step by step",cmd_si},
   {"info","args:r/w;print infomation about registers or watchpoint",cmd_info},
   {"x","x [N] [EXPR];scan the memory",cmd_x},
-  {"p","expr",cmd_p},
-  {"w","set the watchpoint",cmd_w},
-  {"d","delete the watchpoint",cmd_d},
+  //{"p","expr",cmd_p},
+  //{"w","set the watchpoint",cmd_w},
+  //{"d","delete the watchpoint",cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
