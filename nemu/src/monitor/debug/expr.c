@@ -124,7 +124,89 @@ static bool make_token(char *e) {
 
   return true;
 }
+uint32_t eval(int p,int q){
+    if(p>q){   //3+缺省为3+0 --1缺省为0--1
+        // printf("Bad expression\n");
+        return 0;
+        // assert(0);
+    }
+    else if(p==q){
+        uint32_t res;
+        if(tokens[p].type == TK_HEX) sscanf(tokens[p].str,"%x",&res);
+        else if(tokens[p].type == TK_DEC) sscanf(tokens[p].str,"%d",&res);
+        else if(tokens[p].type == TK_REG){
+            char tmp[3] = {tokens[p].str[1],tokens[p].str[2],tokens[p].str[3]};
+            for(int i=0;i<8;i++)
+                if(!strcmp(tmp,regsl[i])){return cpu.gpr[i]._32;}
+            for(int i=0;i<8;i++)
+                if(!strcmp(tmp,regsw[i])){return cpu.gpr[i]._16;}
+            for(int i=0;i<8;i++) 
+                if(!strcmp(tmp,regsb[i])){return cpu.gpr[i%4]._8[i/4];}
+	    char teip[3]="eip";
+	    if(strcmp(tmp,teip))return cpu.eip;
+        }
+        else assert(0);
+        return res;
+    }
+    else if(check_parentheses(p,q) == true){
+        return eval(p+1,q-1);
+    }
+    else{
+        int op=0;
+        int op_type=0;
+        bool left = false;//
+        int curr_prev = 100;//
+        for(int i=p;i<=q;i++){  //�
+            if(tokens[i].str[0]==')')
+            {
+                left = false;
+                continue;
+            }
+            if(left)
+                continue;
+            if(tokens[i].str[0]=='(')
+            {
+                left = true;
+                continue;
+            }
+            switch(tokens[i].type){
+                case TK_OR:if(curr_prev>1){curr_prev=1;op=i;op_type=TK_OR;continue;}
+                case TK_AND:if(curr_prev>2){curr_prev=2;op=i;op_type=TK_AND;continue;}
+                case TK_NEQ:if(curr_prev>3){curr_prev=3;op=i;op_type=TK_NEQ;continue;}
+                case TK_EQ:if(curr_prev>3){curr_prev=3;op=i;op_type=TK_EQ;continue;}
+                case '<':if(curr_prev>4){curr_prev=4;op=i;op_type='<';continue;}
+                case '>':if(curr_prev>4){curr_prev=4;op=i;op_type='>';continue;}
+                case '+':if(curr_prev>6){curr_prev=6;op=i;op_type='+';continue;}
+                case '-':if(curr_prev>6){curr_prev=6;op=i;op_type='-';continue;}
+                case '*':if(curr_prev>7){curr_prev=7;op=i;op_type='*';continue;}
+                case '/':if(curr_prev>7){curr_prev=7;op=i;op_type='/';continue;}
+                case '!':if(curr_prev>8){curr_prev=8;op=i;op_type='!';continue;}
+                case TK_NEG:if(curr_prev>9){curr_prev=9;op=i;op_type=TK_NEG;continue;}
+                case TK_POI:if(curr_prev>9){curr_prev=9;op=i;op_type=TK_POI;continue;}
+                default:continue;
+            }
+        }
 
+        uint32_t val1 = eval(p,op-1);
+        uint32_t val2 = eval(op+1,q);
+        switch(op_type){
+            case TK_OR:return val1||val2;
+            case TK_AND:return val1&&val2;
+            case TK_NEQ:return val1!=val2;
+            case TK_EQ:return val1==val2;
+            case '<':return val1<val2;
+            case '>':return val1>val2;
+            case '+':return val1+val2;
+            case '-':return val1-val2;
+            case '*':return val1*val2;
+            case '/':return val1/val2;
+            case '!':return !val2;
+            case TK_NEG:return -1*val2; 
+            case TK_POI:return vaddr_read(val2,4);
+            default:assert(0);
+        }
+    }
+}
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -132,7 +214,20 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  //TODO();
+  if(nr_token!=1)  
+    for(int i=0;i<nr_token;i++)  //
+        if(tokens[i].type == '-' &&(i==0||tokens[i-1].type == '('||tokens[i-1].type == TK_NEG
+                                                                 ||tokens[i-1].type == '-'
+                                                                 ||tokens[i-1].type == '+'
+                                                                 ||tokens[i-1].type == '*'
+                                                                 ||tokens[i-1].type == '/'))
+            tokens[i].type = TK_NEG;
+      for(int i=0;i<nr_token;i++)
+          if(tokens[i].type == '*' &&(i==0||(tokens[i-1].type!=TK_DEC && tokens[i-1].type!=TK_HEX && tokens[i-1].type!=')')))
+              tokens[i].type = TK_POI;
 
-  return 0;
+ 
+
+  return eval(0, nr_token-1);
 }
