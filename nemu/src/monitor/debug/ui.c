@@ -48,7 +48,12 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+  {"si","args:[N];execute [N] instructions step by step",cmd_si},
+  {"info","args:r/w;print infomation about registers or watchpoint",cmd_info},
+  {"x","x [N] [EXPR];scan the memory",cmd_x},
+  {"p","expr",cmd_p},
+  {"w","set the watchpoint",cmd_w},
+  {"d","delete the watchpoint",cmd_d}, ä
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -76,6 +81,38 @@ static int cmd_help(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args) {
+	int step;
+	if (args == NULL) step = 1;
+	else sscanf(args, "%d", &step);
+	cpu_exec(step);
+	return 0;
+}
+
+static int cmd_info(char *args) {
+	if (args[0] == 'r') {
+		int i;
+		for (i = R_EAX; i <= R_EDI ; i++) {
+			printf("$%s\t0x%08x\n", regsl[i], reg_l(i));
+		}
+		printf("$eip\t0x%08x\n", cpu.eip);
+	}
+	return 0;
+}
+
+static int cmd_x(char *args){
+	if (args == NULL) {
+        printf("Wrong Command!\n");
+        return 0;
+    }
+	int num,exprs;
+	sscanf(args,"%d%x",&num,&exprs);
+	int i;
+	for (i = 0;i < N;i ++){
+		printf("0x%8x  0x%x\n",exprs + i*32,swaddr_read(exprs + i * 32,32));
+	}
+	return 0;
+}
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
     cmd_c(NULL);
