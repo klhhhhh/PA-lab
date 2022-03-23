@@ -37,7 +37,12 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_help(char *args);
-
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_x(char *args);
+static int cmd_p(char *args);
+static int cmd_w(char* args);
+static int cmd_d(char * agrs);
 static struct {
   char *name;
   char *description;
@@ -48,7 +53,12 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+  {"si","args:[N];execute [N] instructions step by step",cmd_si},
+  {"info","args:r/w;print infomation about registers or watchpoint",cmd_info},
+  {"x","x [N] [EXPR];scan the memory",cmd_x},
+  {"p","expr",cmd_p},
+  {"w","set the watchpoint",cmd_w},
+  {"d","delete the watchpoint",cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -76,6 +86,109 @@ static int cmd_help(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args) {
+	int step;
+	if (args == NULL) step = 1;
+	else sscanf(args, "%d", &step);
+	cpu_exec(step);
+	return 0;
+}
+
+static int cmd_info(char *args) {
+	if (args[0] == 'r') {
+		int i;
+		for (i = R_EAX; i <= R_EDI ; i++) {
+			printf("$%s\t0x%08x\n", regsl[i], reg_l(i));
+		}
+		printf("$eip\t0x%08x\n", cpu.eip);
+	
+	}
+	char s;
+	int nRet=sscanf(args,"%c",&s);
+	if(s=="w"){
+		print_wp();
+		return 0;
+	}
+	return 0;
+}
+static int cmd_x(char *args){
+    //获取内存起始地址和扫描长度。
+    if(args == NULL){
+        printf("too few parameter! \n");
+        return 1;
+    }
+     
+    char *arg = strtok(args," ");
+    if(arg == NULL){
+        printf("too few parameter! \n");
+        return 1;
+    }
+    int  n = atoi(arg);
+    char *EXPR = strtok(NULL," ");
+    if(EXPR == NULL){                                                                                                                                          
+        printf("too few parameter! \n");
+        return 1;
+    }
+    if(strtok(NULL," ")!=NULL){
+        printf("too many parameter! \n");
+        return 1;
+    }
+    bool success = true;
+    //vaddr_t addr = expr(EXPR , &success);
+    if (success!=true){
+        printf("ERRO!!\n");
+        return 1;
+    }
+    char *str;
+   // vaddr_t addr = atoi(EXPR);
+    vaddr_t addr =  strtol( EXPR,&str,16 );
+   // printf("%#lX\n",ad);
+    for(int i = 0 ; i < n ; i++){
+        uint32_t data = vaddr_read(addr + i * 4,4);
+        printf("0x%08x  " , addr + i * 4 );
+        for(int j =0 ; j < 4 ; j++){
+            printf("0x%02x " , data & 0xff);
+            data = data >> 8 ;
+        }
+        printf("\n");
+    }
+     
+    return 0;
+}    
+static int cmd_p(char *args) {
+    bool *success=false;
+    // char *arg = strtok(NULL, " "); 
+    if(args == NULL)
+    {
+        printf("Lack of parameter!\n");
+        return 0;
+    }
+    uint32_t res =  expr(args,success);
+    printf("the value of expr is\n",res);
+    return 0;
+}
+
+static int cmd_w(char* args){
+	new_wp(args);
+	return 0;
+}
+
+static int cmd_d(char* args){
+	int num=0;
+	int nRet=sscanf(args,"%d",&num);
+	if(nRet<=0){
+		printf("args error in cmd_si\n");
+		return 0;
+	}
+	int r=free_wp(num);
+	if(r==false){
+		printf("error: no watchpoint %d\n",num);
+	}
+	else{
+		printf("success delete watchpoint %d\n",num);
+	}
+	return 0;
+}
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
     cmd_c(NULL);
