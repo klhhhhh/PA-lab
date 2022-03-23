@@ -35,10 +35,10 @@ bool new_wp(char *args){
           result->hitNum=0;
           bool success;
           result->oldValue=expr(result->e, &success);//
-          if(success==false){
-                 printf("error in new_wp:expression fault\n");
-                 return false;
-          }
+          //if(success==false){
+          //       printf("error in new_wp:expression fault\n");
+          //       return false;
+          //}
           wptemp=head;
           if(wptemp==NULL)
                  head=result;//
