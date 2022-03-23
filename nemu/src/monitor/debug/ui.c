@@ -101,6 +101,13 @@ static int cmd_info(char *args) {
 			printf("$%s\t0x%08x\n", regsl[i], reg_l(i));
 		}
 		printf("$eip\t0x%08x\n", cpu.eip);
+	
+	}
+	char s;
+	int nRet=sscanf(args,"%c",&s);
+	if(s=="w"){
+		print_wp();
+		return 0;
 	}
 	return 0;
 }
