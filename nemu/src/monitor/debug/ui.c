@@ -37,7 +37,12 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_help(char *args);
-
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_x(char *args);
+static int cmd_p(char *args);
+static int cmd_w(char* args);
+static int cmd_d(char * agrs);
 static struct {
   char *name;
   char *description;
@@ -53,7 +58,7 @@ static struct {
   {"x","x [N] [EXPR];scan the memory",cmd_x},
   {"p","expr",cmd_p},
   {"w","set the watchpoint",cmd_w},
-  {"d","delete the watchpoint",cmd_d}, �
+  {"d","delete the watchpoint",cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -99,20 +104,51 @@ static int cmd_info(char *args) {
 	}
 	return 0;
 }
-
 static int cmd_x(char *args){
-	if (args == NULL) {
-        printf("Wrong Command!\n");
-        return 0;
+    //获取内存起始地址和扫描长度。
+    if(args == NULL){
+        printf("too few parameter! \n");
+        return 1;
     }
-	int num,exprs;
-	sscanf(args,"%d%x",&num,&exprs);
-	int i;
-	for (i = 0;i < N;i ++){
-		printf("0x%8x  0x%x\n",exprs + i*32,swaddr_read(exprs + i * 32,32));
-	}
-	return 0;
-}
+     
+    char *arg = strtok(args," ");
+    if(arg == NULL){
+        printf("too few parameter! \n");
+        return 1;
+    }
+    int  n = atoi(arg);
+    char *EXPR = strtok(NULL," ");
+    if(EXPR == NULL){                                                                                                                                          
+        printf("too few parameter! \n");
+        return 1;
+    }
+    if(strtok(NULL," ")!=NULL){
+        printf("too many parameter! \n");
+        return 1;
+    }
+    bool success = true;
+    //vaddr_t addr = expr(EXPR , &success);
+    if (success!=true){
+        printf("ERRO!!\n");
+        return 1;
+    }
+    char *str;
+   // vaddr_t addr = atoi(EXPR);
+    vaddr_t addr =  strtol( EXPR,&str,16 );
+   // printf("%#lX\n",ad);
+    for(int i = 0 ; i < n ; i++){
+        uint32_t data = vaddr_read(addr + i * 4,4);
+        printf("0x%08x  " , addr + i * 4 );
+        for(int j =0 ; j < 4 ; j++){
+            printf("0x%02x " , data & 0xff);
+            data = data >> 8 ;
+        }
+        printf("\n");
+    }
+     
+    return 0;
+}    
+
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
     cmd_c(NULL);
