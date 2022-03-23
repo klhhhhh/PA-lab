@@ -28,10 +28,10 @@ typedef struct {
    * in PA2 able to directly access these registers.
    */
   struct {
-     unint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+     uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   };
 };
-  swaddr_t eip;
+  vaddr_t eip;
 
 } CPU_state;
 
