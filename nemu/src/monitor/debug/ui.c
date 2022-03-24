@@ -112,12 +112,10 @@ static int cmd_info(char *args) {
 	return 0;
 }
 static int cmd_x(char *args){
-    //获取内存起始地址和扫描长度。
     if(args == NULL){
         printf("too few parameter! \n");
         return 1;
-    }
-     
+    }     
     char *arg = strtok(args," ");
     if(arg == NULL){
         printf("too few parameter! \n");
