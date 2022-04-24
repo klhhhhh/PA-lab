@@ -7,8 +7,24 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  TODO();
+  //TODO();
+  rtl_sub(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
+ 
+  rtl_update_ZFSF(&t0, id_dest->width);
+ 
+  // 产生借位 CF 的条件为：
+  // 在无符号条件下，被减数小于减数
+  rtl_sltu(&t1, &id_dest->val, &id_src->val);
+  rtl_set_CF(&t1);
 
+  // 产生溢出位 OF 的条件为：
+  // 在有符号条件下，被减数与减数异号，且被减数与相减结果异号
+  rtl_xor(&t2, &id_dest->val, &id_src->val);
+  rtl_xor(&t3, &id_dest->val, &t0);
+  rtl_and(&t0, &t2, &t3);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template2(sub);
 }
 
