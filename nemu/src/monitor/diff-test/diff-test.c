@@ -92,6 +92,7 @@ void init_difftest(void) {
   }
   else {
     // father
+    Log("ok");
 
     gdb_connect_qemu();
     Log("Connect to QEMU successfully");
@@ -117,7 +118,6 @@ void init_difftest(void) {
       gdb_si();
     }
   }
-    Log("ok");
 
 }
 
