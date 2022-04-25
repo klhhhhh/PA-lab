@@ -1,8 +1,22 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-  TODO();
+  //TODO();
+  rtl_add(&t0, &id_dest->val, &id_src->val);
+  operand_write(id_dest, &t0);
 
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+  // 产生进位 CF 的条件为：
+  // 在无符号条件下，加法结果小于被加数
+   rtl_sltu(&t1, &t0, &id_dest->val);
+   rtl_set_CF(&t1);
+   rtl_xor(&t2, &id_dest->val, &id_src->val);
+   rtl_not(&t2);
+   rtl_xor(&t3, &id_dest->val, &t0);
+   rtl_and(&t3, &t2, &t3);
+   rtl_msb(&t3, &t3, id_dest->width);
+   rtl_set_OF(&t3);
   print_asm_template2(add);
 }
 
@@ -29,26 +43,85 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  TODO();
+  //TODO();
+  rtl_sub(&t0, &id_dest->val, &id_src->val);
+
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+  rtl_sltu(&t1, &id_dest->val, &id_src->val);
+  rtl_set_CF(&t1);
+
+  rtl_xor(&t2, &id_dest->val, &id_src->val);
+  rtl_xor(&t3, &id_dest->val, &t0);
+  rtl_and(&t0, &t2, &t3);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template2(cmp);
 }
 
 make_EHelper(inc) {
-  TODO();
+  //TODO();
+  rtl_addi(&t0, &id_dest->val, 1);
+  operand_write(id_dest, &t0);
 
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+  rtl_li(&t2, 1);
+  rtl_xor(&t2, &id_dest->val, &t2);
+  rtl_not(&t2);
+  rtl_xor(&t3, &id_dest->val, &t0);
+  rtl_and(&t3, &t2, &t3);
+  rtl_msb(&t3, &t3, id_dest->width);
+  rtl_set_OF(&t3);
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
-  TODO();
+  //TODO();
+  rtl_subi(&t0, &id_dest->val, 1);
+  operand_write(id_dest, &t0);
 
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+  rtl_xor(&t2, &id_dest->val, &t1);
+  rtl_xor(&t3, &id_dest->val, &t0);
+  rtl_and(&t0, &t2, &t3);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template1(dec);
 }
 
 make_EHelper(neg) {
-  TODO();
+  //TODrtl_mv(&t0, &id_dest->val);
+  rtl_not(&t0);
+  rtl_addi(&t0, &t0, 1);
+  operand_write(id_dest, &t0);
 
+  rtl_update_ZFSF(&t0, id_dest->width);
+
+   // 产生 CF 位的条件为：操作数的值不为 0
+   rtl_neq0(&t1, &id_dest->val);
+   rtl_set_CF(&t1);
+
+   rtl_mv(&t2, &id_dest->val);
+
+   // 产生 OF 位的条件为：在有符号的情况下，操作数的值等于该操作数长度下负数的最小值
+  switch(id_dest->width) {
+   case 1:
+    rtl_andi(&t2, &t2, 0x000000ff);
+    rtl_eqi(&t3, &t2, 0x00000080);
+    break;
+   case 2:
+    rtl_andi(&t2, &t2, 0x0000ffff);
+    rtl_eqi(&t3, &t2, 0x00008000);
+    break;
+   case 4: 
+    rtl_eqi(&t3, &id_dest->val, 0x80000000); 
+    break;
+   default: assert(0);
+  }
+  rtl_set_OF(&t3);
   print_asm_template1(neg);
 }
 
