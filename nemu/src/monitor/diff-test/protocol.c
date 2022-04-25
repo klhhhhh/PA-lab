@@ -103,6 +103,8 @@ static struct gdb_conn* gdb_begin(int fd) {
 
 struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
   // fill the socket information
+  Log("111");
+
   struct sockaddr_in sa = {
     .sin_family = AF_INET,
     .sin_port = htons(port),
@@ -118,7 +120,6 @@ struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
     close(fd);
     return NULL;
   }
-  Log("111");
   socklen_t tmp;
   tmp = 1;
   int r = setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, (char *)&tmp, sizeof(tmp));
