@@ -113,7 +113,7 @@ struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
 
   // open the socket and start the tcp connection
   int fd = socket(AF_INET, SOCK_STREAM, 0);
-  Log("111");
+  Log("%d", fd);
   if (fd < 0)
     err(1, "socket");
   if (connect(fd, (const struct sockaddr *)&sa, sizeof(sa)) != 0) {
