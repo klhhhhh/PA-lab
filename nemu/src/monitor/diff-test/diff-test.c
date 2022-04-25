@@ -89,6 +89,7 @@ void init_difftest(void) {
     execlp("qemu-system-i386", "qemu-system-i386", "-S", "-s", "-nographic", NULL);
     perror("exec");
     panic("exec error");
+    Log("ok");
   }
   else {
     // father
