@@ -103,7 +103,6 @@ static struct gdb_conn* gdb_begin(int fd) {
 
 struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
   // fill the socket information
-  Log("111");
 
   struct sockaddr_in sa = {
     .sin_family = AF_INET,
@@ -112,6 +111,7 @@ struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
   if (inet_aton(addr, &sa.sin_addr) == 0)
     errx(1, "Invalid address: %s", addr);
 
+  Log("111");
   // open the socket and start the tcp connection
   int fd = socket(AF_INET, SOCK_STREAM, 0);
   if (fd < 0)
