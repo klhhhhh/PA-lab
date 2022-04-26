@@ -115,7 +115,7 @@ struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
   int fd = socket(AF_INET, SOCK_STREAM, 0);
   if (fd < 0)
     err(1, "socket");
- 
+  Log("begin");
   if (connect(fd, (const struct sockaddr *)&sa, sizeof(sa)) != 0) {
     close(fd);
     return NULL;
@@ -133,7 +133,6 @@ struct gdb_conn* gdb_begin_inet(const char *addr, uint16_t port) {
     perror("setsockopt");
     panic("setsockopt error");
   }
-
   // initialize the rest of gdb on this handle
   return gdb_begin(fd);
 }
