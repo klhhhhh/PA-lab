@@ -73,13 +73,17 @@ make_EHelper(cltd) {
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     //TODO();
-    rtl_lr(&t0, R_AL, 1);
-    rtl_sr(R_AX,2,&t0);
+    // rtl_lr(&t0, R_AL, 1);
+    // rtl_sr(R_AX,2,&t0);
+    rtl_sext(&t0,&cpu.eax,1);
+    cpu.eax = (cpu.eax & 0xffff0000) | (t0 & 0xffff);
   }
   else {
     //TODO();
-    rtl_lr(&t0, R_AX, 2);
-    rtl_sr(R_EAX,4,&t0);
+    // rtl_lr(&t0, R_AX, 2);
+    // rtl_sr(R_EAX,4,&t0);
+    rtl_sext(&t0,&cpu.eax,2);
+    cpu.eax = t0;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
