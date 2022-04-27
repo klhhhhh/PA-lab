@@ -40,14 +40,18 @@ make_EHelper(leave) {
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    //TODO();
+    //load register
     rtl_lr(&t0, R_AX, 2);
     if((int32_t)(int16_t)t0 < 0) { // dx 的内容是 ax 的符号位
+      //load imm
       rtl_li(&t0, 0x0000ffff);
     }
     else {
+      //load imm
       rtl_li(&t0, 0);
     }
+    //DX宽度为2个字节
     rtl_sr(R_DX, 2, &t0);
   }
   else {
@@ -59,6 +63,7 @@ make_EHelper(cltd) {
     else {
      rtl_li(&t0, 0);
     }
+    //EDX四个字节
     rtl_sr(R_EDX, 4, &t0);
   }
 
@@ -67,10 +72,14 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    //TODO();
+    rtl_lr(&t0, R_AL, 1);
+    rtl_sr(R_AX,2,&t0);
   }
   else {
-    TODO();
+    //TODO();
+    rtl_lr(&t0, R_AX, 2);
+    rtl_sr(R_EAX,4,&t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
