@@ -80,10 +80,8 @@ make_EHelper(cwtl) {
   }
   else {
     //TODO();
-    // rtl_lr(&t0, R_AX, 2);
-    // rtl_sr(R_EAX,4,&t0);
-    rtl_sext(&t0,&cpu.eax,2);
-    cpu.eax = t0;
+    rtl_lr(&t0, R_AX, 2);
+    rtl_sr(R_EAX,4,&t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
