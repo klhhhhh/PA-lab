@@ -75,8 +75,6 @@ make_EHelper(cwtl) {
     //TODO();
     rtl_lr(&t0, R_AL, 1);
     rtl_sr(R_AX,2,&t0);
-    // rtl_sext(&t0,&cpu.eax,1);
-    // cpu.eax = (cpu.eax & 0xffff0000) | (t0 & 0xffff);
   }
   else {
     //TODO();
