@@ -157,20 +157,20 @@ void difftest_step(uint32_t eip) {
   // TODO: Check the registers state with QEMU.
   // Set `diff` as `true` if they are not the same.
   //TODO();
-  // int i;
-  // for (i=0;i<8;i++){
-  //   if(reg_l(i)!=r.array[i]){
-  //     diff=true;
-  //     printf("\33[1;31mDiff!\33[0m At address: 0x%x\n",r.eip);
-  //     printf("%s Value:0x%x in QEMU,0x%x in NEMU\n",reg_name(i,4),r.array[i],reg_l(i));
-  //   }
+  int i;
+  for (i=0;i<8;i++){
+    if(reg_l(i)!=r.array[i]){
+      diff=true;
+      printf("\33[1;31mDiff!\33[0m At address: 0x%x\n",r.eip);
+      printf("%s Value:0x%x in QEMU,0x%x in NEMU\n",reg_name(i,4),r.array[i],reg_l(i));
+    }
 
-  // }
-  // if(cpu.eip!=r.eip){
-  //   diff = true;
-  //   printf("\33[1;31mDiff!\33[0m At address: 0x%x\n",r.eip);
-  //   printf("eip Value:0x%x in QEMU,0x%x in NEMU\n",r.eip,cpu.eip);
-  // }
+  }
+  if(cpu.eip!=r.eip){
+    diff = true;
+    printf("\33[1;31mDiff!\33[0m At address: 0x%x\n",r.eip);
+    printf("eip Value:0x%x in QEMU,0x%x in NEMU\n",r.eip,cpu.eip);
+  }
   if (diff) {
     nemu_state = NEMU_END;
   }
