@@ -6,7 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define _ERRNO_H_
+// #define _ERRNO_H_
 
 #include <sys/reent.h>
 
