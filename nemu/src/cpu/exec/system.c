@@ -12,7 +12,7 @@ make_EHelper(lidt) {
   t1=id_dest->val+2;
   rtl_lm(&t0,&t1,4);
   cpu.idtr.base=t0;
-  
+
   print_asm_template1(lidt);
 }
 
@@ -48,7 +48,12 @@ make_EHelper(int) {
 }
 
 make_EHelper(iret) {
-  TODO();
+  //TODO();
+  rtl_pop(&decoding.jmp_eip);
+  rtl_pop(&cpu.cs);
+  rtl_pop(&cpu.eflags.val);
+  decoding.is_jmp = 1;
+
 
   print_asm("iret");
 }
