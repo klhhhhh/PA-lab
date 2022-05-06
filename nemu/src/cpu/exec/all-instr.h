@@ -50,3 +50,5 @@ make_EHelper(cwtl);
 
 make_EHelper(int);
 make_EHelper(lidt);
+
+make_EHelper(pusha);

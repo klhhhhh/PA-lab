@@ -5,16 +5,14 @@ void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
   //TODO();
-  rtl_lm((rtlreg_t*)&cpu.idtr.limit, &id_dest->addr, 2); // 先填充前两字节的limit 域 
-  // 填充后面的首地址域
-  if (decoding.is_operand_size_16) {
-    rtl_addi(&t0, &id_dest->addr, 2);
-    rtl_lm(&cpu.idtr.base, &t0, 3);
-  } 
-  else {
-    rtl_addi(&t0, &id_dest->addr, 2);
-    rtl_lm(&cpu.idtr.base, &t0, 4);
-  }
+  t1=id_dest->val;
+  rtl_lm(&t0,&t1,2);
+  cpu.idtr.limit=t0;
+
+  t1=id_dest->val+2;
+  rtl_lm(&t0,&t1,4);
+  cpu.idtr.base=t0;
+  
   print_asm_template1(lidt);
 }
 
