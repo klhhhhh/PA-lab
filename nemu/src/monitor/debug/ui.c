@@ -141,10 +141,12 @@ static int cmd_x(char *args){
    // vaddr_t addr = atoi(EXPR);
     vaddr_t addr =  strtol( EXPR,&str,16 );
    // printf("%#lX\n",ad);
-    for(int i = 0 ; i < n ; i++){
+    int i;
+    for(i = 0 ; i < n ; i++){
         uint32_t data = vaddr_read(addr + i * 4,4);
         printf("0x%08x  " , addr + i * 4 );
-        for(int j =0 ; j < 4 ; j++){
+        int j;
+        for(j =0 ; j < 4 ; j++){
             printf("0x%02x " , data & 0xff);
             data = data >> 8 ;
         }

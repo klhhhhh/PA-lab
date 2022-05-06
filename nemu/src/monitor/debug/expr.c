@@ -103,7 +103,7 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        if(rules[i].token_type == TK_NOTYPE) //çgive up space
+        if(rules[i].token_type == TK_NOTYPE) //ï¿½give up space
             break;
         if(substr_len>31)  //avoid overflow
             assert(0);
@@ -128,7 +128,8 @@ static bool make_token(char *e) {
 bool check_parentheses(int p,int q){
     if((tokens[p].str[0]=='(') && (tokens[q].str[0]==')')){
         int count = 0;
-        for(int i=p;i<q;i++) //
+        int i;
+        for(i=p;i<q;i++) //
         {
             if(tokens[i].str[0] == '(')
                 count = count + 1;
@@ -168,11 +169,12 @@ uint32_t eval(int p,int q){
         else if(tokens[p].type == TK_DEC) sscanf(tokens[p].str,"%d",&res);
         else if(tokens[p].type == TK_REG){
             char tmp[3] = {tokens[p].str[1],tokens[p].str[2],tokens[p].str[3]};
-            for(int i=0;i<8;i++)
+            int i;
+            for(i=0;i<8;i++)
                 if(!strcmp(tmp,regsl[i])){return cpu.gpr[i]._32;}
-            for(int i=0;i<8;i++)
+            for(i=0;i<8;i++)
                 if(!strcmp(tmp,regsw[i])){return cpu.gpr[i]._16;}
-            for(int i=0;i<8;i++) 
+            for(i=0;i<8;i++) 
                 if(!strcmp(tmp,regsb[i])){return cpu.gpr[i%4]._8[i/4];}
 	    char teip[3]="eip";
 	    if(strcmp(tmp,teip))return cpu.eip;
@@ -188,7 +190,8 @@ uint32_t eval(int p,int q){
         int op_type=0;
         bool left = false;//
         int curr_prev = 100;//
-        for(int i=p;i<=q;i++){  
+        int i;
+        for(i=p;i<=q;i++){  
             if(tokens[i].str[0]==')')
             {
                 left = false;
@@ -244,9 +247,10 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  int i;
 
   if(nr_token!=1) 
-    for(int i=0;i<nr_token;i++) 
+    for(i=0;i<nr_token;i++) 
         if(tokens[i].type == '-' &&(i==0||tokens[i-1].type == '('||tokens[i-1].type == TK_NEG
                                                                  ||tokens[i-1].type == '-'
                                                                  ||tokens[i-1].type == '+'
@@ -254,7 +258,8 @@ uint32_t expr(char *e, bool *success) {
                                                                  ||tokens[i-1].type == '/'))
             tokens[i].type = TK_NEG;
  // if(nr_token!=1)
-      for(int i=0;i<nr_token;i++)
+      
+      for(i=0;i<nr_token;i++)
           if(tokens[i].type == '*' &&(i==0||(tokens[i-1].type!=TK_DEC && tokens[i-1].type!=TK_HEX && tokens[i-1].type!=')')))
               tokens[i].type = TK_POI;
 
