@@ -4,8 +4,17 @@ void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
-  TODO();
-
+  //TODO();
+  rtl_lm((rtlreg_t*)&cpu.idtr.limit, &id_dest->addr, 2); // 先填充前两字节的limit 域 
+  // 填充后面的首地址域
+  if (decoding.is_operand_size_16) {
+    rtl_addi(&t0, &id_dest->addr, 2);
+    rtl_lm(&cpu.idtr.base, &t0, 3);
+  } 
+  else {
+    rtl_addi(&t0, &id_dest->addr, 2);
+    rtl_lm(&cpu.idtr.base, &t0, 4);
+  }
   print_asm_template1(lidt);
 }
 
@@ -25,8 +34,11 @@ make_EHelper(mov_cr2r) {
 #endif
 }
 
+//实现int？
 make_EHelper(int) {
-  TODO();
+  //TODO();
+
+  raise_intr(id_dest->val, decoding.seq_eip);
 
   print_asm("int %s", id_dest->str);
 
