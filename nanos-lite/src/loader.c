@@ -1,6 +1,8 @@
 #include "common.h"
 
-#define DEFAULT_ENTRY ((void *)0x4000000)
+// #define DEFAULT_ENTRY ((void *)0x4000000)
+
+#define DEFAULT_ENTRY ((void *)0x8048000)
 
 //注意函数声明
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
