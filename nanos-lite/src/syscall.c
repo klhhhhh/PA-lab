@@ -14,10 +14,12 @@ void sys_exit(int status) {
 static uintptr_t sys_write(int fd, void *buf, size_t count) {
     if (fd == 1 || fd == 2) { // stdout or stderr
       size_t i;
+      char c;
       for (i = 0; i < count; i++) {
-        _putc(*((char*)buf + i));
+        memcpy(&c,buf+i,1);
+        _putc(c);
       }  
-      return i;
+      return count;
     }  
     return -1;
   }
