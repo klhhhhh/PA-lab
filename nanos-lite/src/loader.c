@@ -1,5 +1,5 @@
 #include "common.h"
-
+#include "fs.h"
 // #define DEFAULT_ENTRY ((void *)0x4000000)
 
 #define DEFAULT_ENTRY ((void *)0x4000000)
@@ -20,7 +20,7 @@ extern uint8_t ramdisk_end;
 
 uintptr_t loader(_Protect *as, const char *filename) {
   //TODO();
-  assert(filename);
+  // assert(filename);
   Log("The image is %s",filename);
   int fd=fs_open(filename,0,0);
   fs_read(fd,(void*)DEFAULT_ENTRY,fs_filesz(fd));
