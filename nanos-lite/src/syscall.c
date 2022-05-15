@@ -7,7 +7,7 @@ extern ssize_t fs_read(int fd, void *buf, size_t len);
 extern ssize_t fs_write(int fd, const void *buf, size_t len);
 extern off_t fs_lseek(int fd, off_t offset, int whence);
 extern int fs_close(int fd);
-extern int mm_brk(uint32_t new_brk);
+
 
 
 static uintptr_t sys_none() {
@@ -25,7 +25,7 @@ static uintptr_t sys_write(int fd, void *buf, size_t count) {
     if (fd == 1 || fd == 2) { // stdout or stderr
       size_t i;
       char c;
-      // Log("buffer:%s",(char*)buf);
+      Log("buffer:%s",(char*)buf);
       for (i = 0; i < count; i++) {
         memcpy(&c,buf+i,1);
         _putc(c);
@@ -40,6 +40,7 @@ static uintptr_t sys_write(int fd, void *buf, size_t count) {
 }
 
 int sys_brk(int addr){
+  
   return 0;
 }  
 
