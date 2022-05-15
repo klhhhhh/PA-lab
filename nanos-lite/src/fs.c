@@ -24,11 +24,13 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  extern void getScreen(int* p_width,int* p_height);
-  int width=0,height=0;
-  getScreen(&width,&height);
-  file_table[FD_FB].size = width*height*sizeof(uint32_t);
-  Log("set FD_FB size=%d",file_table[FD_FB].size);
+  // extern void getScreen(int* p_width,int* p_height);
+  // int width=0,height=0;
+  // getScreen(&width,&height);
+  // file_table[FD_FB].size = width*height*sizeof(uint32_t);
+  // Log("set FD_FB size=%d",file_table[FD_FB].size);
+  file_table[FD_FB].size = (off_t)(_screen.width * _screen.height * sizeof(uint32_t));
+
 }
 
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);

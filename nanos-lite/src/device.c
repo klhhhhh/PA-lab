@@ -8,8 +8,24 @@ static const char *keyname[256] __attribute__((used)) = {
   _KEYS(NAME)
 };
 
+int current_game=0;
 size_t events_read(void *buf, size_t len) {
-  return 0;
+  int key = _read_key();
+  bool down = false;
+  if (key & 0x8000) {
+    key ^= 0x8000;
+    down = true;
+  }
+  if (key != _KEY_NONE) {
+    snprintf((char*)buf, len + 1, "%s %s\n", down ? "kd" : "ku", keyname[key]);
+    if (key == _KEY_F12 && down) {
+      current_game = (current_game == 0 ? 2 : 0);
+    }
+  }
+  else {
+  	snprintf((char*)buf, len + 1, "t %d\n", _uptime());
+  }
+  return strlen(buf);
 }
 
 static char dispinfo[128] __attribute__((used));
