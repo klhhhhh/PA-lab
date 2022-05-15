@@ -41,9 +41,8 @@ size_t fs_filesz(int fd) {
 
 int fs_open(const char *pathname, int flags, int mode) {
   int i;
-  for (i = 3; i < NR_FILES; i++) {
+  for (i = 0; i < NR_FILES; i++) {
     if (strcmp(pathname, file_table[i].name) == 0) {
-      file_table[i].open_offset = 0;
       return i;
     }
   }
@@ -113,4 +112,5 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 
 int fs_close(int fd) {
   assert(fd > 2 && fd < NR_FILES);
-  return 0;  }
+  return 0;  
+}
