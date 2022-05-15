@@ -25,7 +25,7 @@ static uintptr_t sys_write(int fd, void *buf, size_t count) {
     if (fd == 1 || fd == 2) { // stdout or stderr
       size_t i;
       char c;
-      Log("buffer:%s",(char*)buf);
+      // Log("buffer:%s",(char*)buf);
       for (i = 0; i < count; i++) {
         memcpy(&c,buf+i,1);
         _putc(c);
@@ -40,7 +40,7 @@ static uintptr_t sys_write(int fd, void *buf, size_t count) {
 }
 
 int sys_brk(int addr){
-  
+
   return 0;
 }  
 
