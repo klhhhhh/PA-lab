@@ -31,7 +31,7 @@ int main() {
 
   init_fs();
 
-  uint32_t entry = loader(NULL,"/bin/pal");
+  uint32_t entry = loader(NULL,"/bin/hello");
   ((void (*)(void))entry)();
 
   panic("Should not reach here");
